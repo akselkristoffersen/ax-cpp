@@ -5,5 +5,5 @@
 // Test cases
 TEST_CASE("test_packet_iterator", "[packet_iterator]")
 {
-    REQUIRE(ax::packet_iterator());
+    REQUIRE(!ax::packet_iterator());
 }
