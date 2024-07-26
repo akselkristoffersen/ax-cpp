@@ -13,12 +13,12 @@ struct get_size
 
 TEST_CASE("is forward range")
 {
-    REQUIRE(std::ranges::forward_range<ax::packet_iterator<const std::byte>>);
+    REQUIRE(std::ranges::forward_range<ax::packet_iterator<const std::byte, get_size>>);
 }
 
 TEST_CASE("default iterator")
 {
-    REQUIRE(std::ranges::distance(ax::packet_iterator<const std::byte>{}) == 0);
+    REQUIRE(std::ranges::distance(ax::packet_iterator<const std::byte, get_size>{}) == 0);
 }
 
 TEST_CASE("empty buffer")

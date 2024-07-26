@@ -1,20 +1,9 @@
 #include <iterator>
 #include <span>
+
 namespace ax
 {
-	namespace detail
-	{
-		struct packet_iterator_function_placeholder
-		{
-			template <typename T>
-			std::size_t operator()(std::span<T>) const
-			{
-				return {};
-			}
-		};
-	}
-
-    template<typename T, typename F = detail::packet_iterator_function_placeholder>
+    template<typename T, typename F>
     requires std::is_invocable_r_v<std::size_t, F, std::span<T>>
     class packet_iterator
     {
