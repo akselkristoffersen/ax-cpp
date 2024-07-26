@@ -10,7 +10,7 @@ namespace ax
     public:
         packet_iterator() = default;
         packet_iterator(std::span<T> buffer, F func)
-            : buffer(buffer), get_next_size_func(std::move(func))
+            : buffer(buffer), get_size_func(std::move(func))
         {
         }
 
@@ -19,12 +19,12 @@ namespace ax
 
         std::span<T> operator*() const
         {
-            return buffer.subspan(0, get_next_size_func(buffer));
+            return buffer.subspan(0, get_size_func(buffer));
         }
 
         packet_iterator& operator++()
         {
-            buffer = buffer.subspan(get_next_size_func(buffer));
+            buffer = buffer.subspan(get_size_func(buffer));
             return *this;
         }
 
@@ -42,7 +42,12 @@ namespace ax
 
         bool operator==(const std::default_sentinel_t&) const
         {
-            return buffer.empty() || get_next_size_func(buffer) > buffer.size();
+            if (buffer.empty())
+            {
+                return true;
+            }
+            auto const size{ get_size_func(buffer) };
+            return size == 0 || size > buffer.size();
         }
 
         packet_iterator begin() const
@@ -57,7 +62,7 @@ namespace ax
 
     private:
         std::span<T> buffer;
-        F get_next_size_func;
+        F get_size_func;
     };
 }
 
