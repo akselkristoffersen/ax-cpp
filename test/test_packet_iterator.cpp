@@ -6,8 +6,8 @@
 struct get_size
 {
     std::size_t operator()(std::span<const std::byte> buf) const
-    {    
-        return std::to_integer<std::size_t>(buf.front());
+    {   
+        return buf.empty() ? 0 : std::to_integer<std::size_t>(buf.front());
     }
 };
 
