@@ -10,7 +10,7 @@ namespace ax
     public:
         packet_iterator() = default;
         packet_iterator(std::span<T> buffer, F func)
-            : buffer(buffer), func(std::move(func))
+            : buffer(buffer), get_next_size_func(std::move(func))
         {
         }
 
@@ -19,12 +19,12 @@ namespace ax
 
         std::span<T> operator*() const
         {
-            return buffer.subspan(current_pos, func(buffer.subspan(current_pos)));
+            return buffer.subspan(0, get_next_size_func(buffer));
         }
 
         packet_iterator& operator++()
         {
-            current_pos += func(buffer.subspan(current_pos));
+            buffer = buffer.subspan(get_next_size_func(buffer));
             return *this;
         }
 
@@ -37,21 +37,17 @@ namespace ax
 
         bool operator==(const packet_iterator& rhs) const
         {
-            if (buffer.data() != rhs.buffer.data())
-            {
-                return false;
-            }
-            return current_pos == rhs.current_pos;
+            return buffer.data() == rhs.buffer.data();
         }
 
         bool operator==(const std::default_sentinel_t&) const
         {
-            return is_end();
+            return buffer.empty() || get_next_size_func(buffer) > buffer.size();
         }
 
         packet_iterator begin() const
         {
-            return { buffer, func };
+            return *this;
         }
 
         std::default_sentinel_t end() const
@@ -61,18 +57,7 @@ namespace ax
 
     private:
         std::span<T> buffer;
-        std::size_t current_pos{};
-        F func;
-
-        [[nodiscard]] bool is_end() const
-        {
-            if (buffer.empty())
-            {
-                return true;
-            }
-            auto const next_size{ func(buffer.subspan(current_pos)) };
-            return next_size == 0 || current_pos + next_size > buffer.size();
-        }
+        F get_next_size_func;
     };
 }
 
