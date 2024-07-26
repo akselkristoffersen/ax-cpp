@@ -1,5 +1,5 @@
 #include <iterator>
-
+#include <span>
 namespace ax
 {
 	namespace detail
