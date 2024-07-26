@@ -13,12 +13,12 @@ struct get_size
 
 TEST_CASE("is forward range")
 {
-    REQUIRE(std::ranges::forward_range<ax::packet_iterator<const std::byte, get_size>>);
+    REQUIRE(std::ranges::forward_range<ax::packet_iterator<const std::byte>>);
 }
 
 TEST_CASE("default iterator")
 {
-    REQUIRE(std::ranges::distance(ax::packet_iterator<const std::byte, get_size>{}) == 0);
+    REQUIRE(std::ranges::distance(ax::packet_iterator<const std::byte>{}) == 0);
 }
 
 TEST_CASE("empty buffer")
@@ -45,6 +45,18 @@ TEST_CASE("complete packets")
         REQUIRE((*++it).size() == 2);
         REQUIRE((*++it).size() == 4);
     }
+}
+
+TEST_CASE("with lambda")
+{
+    std::vector<std::uint8_t> const buffer{ 3, 0, 0, 2, 0, 4, 0, 0, 0 };
+    auto const buffer_as_bytes{ std::as_bytes(std::span(buffer)) };
+
+    REQUIRE(std::ranges::distance(ax::packet_iterator{buffer_as_bytes, 
+    [](std::span<const std::byte> buf)
+    {
+        return std::to_integer<std::size_t>(buf.front());
+    }}) == 3);
 }
 
 TEST_CASE("incomplete packets 1")
