@@ -11,6 +11,11 @@ struct get_size
     }
 };
 
+TEST_CASE("is forward iterator")
+{
+    REQUIRE(std::forward_iterator<ax::packet_iterator<const std::byte, get_size>>);
+}
+
 TEST_CASE("is forward range")
 {
     REQUIRE(std::ranges::forward_range<ax::packet_iterator<const std::byte, get_size>>);
@@ -59,6 +64,17 @@ TEST_CASE("with lambda")
     }}) == 3);
 }
 
+TEST_CASE("with lambda and another type")
+{
+    std::vector<std::uint8_t> const buffer{ 3, 0, 0, 2, 0, 4, 0, 0, 0 };
+
+    REQUIRE(std::ranges::distance(ax::packet_iterator{std::span(buffer), 
+    [](std::span<const std::uint8_t> buf)
+    {
+        return buf.front();
+    }}) == 3);
+}
+
 TEST_CASE("incomplete packets 1")
 {
     std::vector<std::uint8_t> const buffer{ 3, 0 };
@@ -72,4 +88,17 @@ TEST_CASE("incomplete packets 2")
     auto const buffer_as_bytes{ std::as_bytes(std::span(buffer)) };
     REQUIRE(std::ranges::distance(ax::packet_iterator{buffer_as_bytes, get_size{}}) == 1);
     REQUIRE((*ax::packet_iterator{buffer_as_bytes, get_size{}}).size() == 3);
+}
+
+TEST_CASE("return range from function")
+{
+    std::vector<std::uint8_t> const buffer{ 3, 0, 0, 2, 0, 4, 0, 0, 0 };
+    auto range{ []<typename T>(std::span<T> buffer)
+        {
+            return ax::packet_iterator{buffer, [](std::span<const std::uint8_t> buf)
+                {
+                    return buf.front();
+                }};
+        } };
+    REQUIRE(std::ranges::distance(range(std::span{buffer})) == 3);
 }
