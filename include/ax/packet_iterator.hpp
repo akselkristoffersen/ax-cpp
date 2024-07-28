@@ -4,7 +4,7 @@
 namespace ax
 {
     template<typename T, typename F>
-    requires std::is_invocable_r_v<std::size_t, F, std::span<T>>
+        requires std::is_invocable_r_v<std::size_t, F, std::span<T>>
     class packet_iterator
     {
     public:
@@ -64,5 +64,5 @@ namespace ax
 }
 
 template<typename T, typename F>
-requires std::is_invocable_r_v<std::size_t, F, std::span<const std::byte>>
+    requires std::is_invocable_r_v<std::size_t, F, std::span<T>>
 inline constexpr bool std::ranges::enable_borrowed_range<ax::packet_iterator<T, F>> = true;
