@@ -10,7 +10,9 @@ namespace ax
     public:
         packet_iterator() = default;
         packet_iterator(std::span<T> buffer, F func)
-            : buffer(buffer), get_size_func(std::move(func)), size(get_size_func(buffer))
+            : buffer(buffer)
+            , get_size_func(std::move(func))
+            , size(buffer.empty() ? 0 : get_size_func(buffer))
         {
         }
 
@@ -58,8 +60,8 @@ namespace ax
 
     private:
         std::span<T> buffer;
-        std::size_t size;
         F get_size_func;
+        std::size_t size;
     };
 }
 
