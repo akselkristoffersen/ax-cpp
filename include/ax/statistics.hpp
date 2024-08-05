@@ -34,7 +34,7 @@ template<
     }
     if (size == 0)
     {
-        throw std::invalid_argument("Error: Attempt to compute the mean of an empty range\n");
+        throw std::invalid_argument("Error: Attempted to compute the mean of an empty range");
     }
     return sum / size;
 }
@@ -68,7 +68,7 @@ template<
     }
     if (size == 0)
     {
-        throw std::invalid_argument("Error: Attempt to compute the variance of an empty range\n");
+        throw std::invalid_argument("Error: Attempted to compute the variance of an empty range");
     }
     return sum / size;
 }
