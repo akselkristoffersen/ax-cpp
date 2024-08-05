@@ -16,22 +16,21 @@ template<
 {
     T sum{};
     std::size_t size{};
+
     if constexpr (std::ranges::sized_range<R>)
     {
         size = std::ranges::size(r);
-        for (const auto& val : r)
-        {
-            sum += std::invoke(proj, val);
-        }
     }
-    else
+  
+    for (const auto& val : r)
     {
-        for (const auto& val : r)
+        sum += std::invoke(proj, val);
+        if constexpr (!std::ranges::sized_range<R>)
         {
-            sum += std::invoke(proj, val);
             ++size;
         }
     }
+    
     if (size == 0)
     {
         throw std::invalid_argument("Error: Attempted to compute the mean of an empty range");
@@ -50,22 +49,21 @@ template<
 {
     T sum{};
     std::size_t size{};
+    
     if constexpr (std::ranges::sized_range<R>)
     {
         size = std::ranges::size(r);
-        for (const auto& val : r)
-        {
-            sum += std::pow(std::invoke(proj, val) - mean, 2);
-        }
     }
-    else
+
+    for (const auto& val : r)
     {
-        for (const auto& val : r)
+        sum += std::pow(std::invoke(proj, val) - mean, 2);
+        if constexpr (!std::ranges::sized_range<R>)
         {
-            sum += std::pow(std::invoke(proj, val) - mean, 2);
             ++size;
         }
     }
+
     if (size == 0)
     {
         throw std::invalid_argument("Error: Attempted to compute the variance of an empty range");
