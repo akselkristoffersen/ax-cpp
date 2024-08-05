@@ -4,7 +4,7 @@
 
 TEST_CASE("mean - empty range")
 {
-    REQUIRE_THROWS_AS(ax::ranges::mean(std::ranges::empty_view<double>{}), std::invalid_argument);
+    REQUIRE_THROWS_AS(ax::ranges::mean(std::vector<double>{}), std::invalid_argument);
 }
 
 TEST_CASE("mean - one element")
@@ -27,7 +27,7 @@ TEST_CASE("mean - three elements")
 
 TEST_CASE("variance - empty range")
 {
-    REQUIRE_THROWS_AS(ax::ranges::variance(std::ranges::empty_view<double>{}), std::invalid_argument);
+    REQUIRE_THROWS_AS(ax::ranges::variance(std::vector<double>{}), std::invalid_argument);
 }
 
 TEST_CASE("variance - one element")
@@ -62,7 +62,7 @@ TEST_CASE("variance - more element with mean float")
 
 TEST_CASE("standard_deviation - empty range")
 {
-    REQUIRE_THROWS_AS(ax::ranges::standard_deviation(std::ranges::empty_view<double>{}), std::invalid_argument);
+    REQUIRE_THROWS_AS(ax::ranges::standard_deviation(std::vector<double>{}), std::invalid_argument);
 }
 
 TEST_CASE("standard_deviation - one element")
