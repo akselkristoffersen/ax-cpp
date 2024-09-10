@@ -48,52 +48,29 @@ TEST_CASE("variance - more elements")
     REQUIRE_THAT(ax::ranges::variance(numbers), Catch::Matchers::WithinRel(2.1875));
 }
 
-TEST_CASE("variance - more element with mean")
+TEST_CASE("stdev - empty range")
 {
-    std::vector<double> numbers{ 2, 3, 4, 6 }; 
-    REQUIRE_THAT(ax::ranges::variance(numbers, 3.75), Catch::Matchers::WithinRel(2.1875));
+    REQUIRE_THROWS_AS(ax::ranges::stdev(std::vector<double>{}), std::invalid_argument);
 }
 
-TEST_CASE("variance - more element with mean float")
-{
-    std::vector<double> numbers{ 2, 3, 4, 6 }; 
-    REQUIRE_THAT(ax::ranges::variance<float>(numbers, 3.75), Catch::Matchers::WithinRel(2.1875));
-}
-
-TEST_CASE("standard_deviation - empty range")
-{
-    REQUIRE_THROWS_AS(ax::ranges::standard_deviation(std::vector<double>{}), std::invalid_argument);
-}
-
-TEST_CASE("standard_deviation - one element")
+TEST_CASE("stdev - one element")
 {
     std::vector<double> numbers{ 2.0 }; 
-    REQUIRE_THAT(ax::ranges::standard_deviation(numbers), Catch::Matchers::WithinRel(0.0));
+    REQUIRE_THAT(ax::ranges::stdev(numbers), Catch::Matchers::WithinRel(0.0));
 }
 
-TEST_CASE("standard_deviation - one element float")
+TEST_CASE("stdev - one element float")
 {
     std::vector<double> numbers{ 2.0 }; 
-    REQUIRE_THAT(ax::ranges::standard_deviation<float>(numbers), Catch::Matchers::WithinRel(0.0f));
+    REQUIRE_THAT(ax::ranges::stdev<float>(numbers), Catch::Matchers::WithinRel(0.0f));
 }
 
-TEST_CASE("standard_deviation - more elements")
+TEST_CASE("stdev - more elements")
 {
     std::vector<double> numbers{ 2, 7 };
-    REQUIRE_THAT(ax::ranges::standard_deviation(numbers), Catch::Matchers::WithinRel(2.5));
+    REQUIRE_THAT(ax::ranges::stdev(numbers), Catch::Matchers::WithinRel(2.5));
 }
 
-TEST_CASE("standard_deviation - three element with mean")
-{
-    std::vector<double> numbers{ 2, 7 }; 
-    REQUIRE_THAT(ax::ranges::standard_deviation(numbers, 4.5), Catch::Matchers::WithinRel(2.5));
-}
-
-TEST_CASE("standard_deviation - three element with mean float")
-{
-    std::vector<double> numbers{ -2, 7 }; 
-    REQUIRE_THAT(ax::ranges::standard_deviation<float>(numbers, 2.5), Catch::Matchers::WithinRel(4.5));
-}
 
 
 
