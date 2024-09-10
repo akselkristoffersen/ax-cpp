@@ -19,12 +19,13 @@ template<
     T M2{};
     std::size_t n{};
 
-    for (const auto value : r | std::views::transform([&proj](const auto& val){ return std::invoke(proj, val); })) 
+    for (const auto& value : r) 
     {
         ++n;
-        const double delta{ value - mean };
+        const T val{ std::invoke(proj, value) };
+        const T delta{ val - mean };
         mean += delta / n;
-        M2 += delta * (value - mean);
+        M2 += delta * (val - mean);
     }
 
     if (n == 0)

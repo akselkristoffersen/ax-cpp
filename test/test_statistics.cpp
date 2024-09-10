@@ -15,7 +15,7 @@ TEST_CASE("mean - one element")
 
 TEST_CASE("mean - one element float")
 {
-    std::vector<double> numbers{ 2.0 }; 
+    std::vector<float> numbers{ 2.0 }; 
     REQUIRE_THAT(ax::ranges::mean<float>(numbers), Catch::Matchers::WithinRel(2.0f));
 }
 
@@ -38,7 +38,7 @@ TEST_CASE("variance - one element")
 
 TEST_CASE("variance - one element float")
 {
-    std::vector<double> numbers{ 2.0 }; 
+    std::vector<float> numbers{ 2.0 }; 
     REQUIRE_THAT(ax::ranges::variance<float>(numbers), Catch::Matchers::WithinRel(0.0f));
 }
 
@@ -61,7 +61,7 @@ TEST_CASE("stdev - one element")
 
 TEST_CASE("stdev - one element float")
 {
-    std::vector<double> numbers{ 2.0 }; 
+    std::vector<float> numbers{ 2.0 }; 
     REQUIRE_THAT(ax::ranges::stdev<float>(numbers), Catch::Matchers::WithinRel(0.0f));
 }
 
