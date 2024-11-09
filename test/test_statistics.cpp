@@ -1,76 +1,71 @@
-#include <catch2/catch_test_macros.hpp>
-#include <catch2/matchers/catch_matchers_floating_point.hpp>
+#include <gtest/gtest.h>
 #include <ax/statistics.hpp>
 
-TEST_CASE("mean - empty range")
+TEST(Mean, EmptyRange)
 {
-    REQUIRE_THROWS_AS(ax::ranges::mean(std::vector<double>{}), std::invalid_argument);
+    ASSERT_THROW(auto result{ ax::ranges::mean(std::vector<double>{}) }, std::invalid_argument);
 }
 
-TEST_CASE("mean - one element")
+TEST(Mean, OneElement)
 {
     std::vector<double> numbers{ 2.0 }; 
-    REQUIRE_THAT(ax::ranges::mean(numbers), Catch::Matchers::WithinRel(2.0));
+    ASSERT_DOUBLE_EQ(ax::ranges::mean(numbers), 2.0);
 }
 
-TEST_CASE("mean - one element float")
+TEST(Mean, OneElementFloat)
 {
     std::vector<float> numbers{ 2.0 }; 
-    REQUIRE_THAT(ax::ranges::mean<float>(numbers), Catch::Matchers::WithinRel(2.0f));
+    ASSERT_FLOAT_EQ(ax::ranges::mean<float>(numbers), 2.0f);
 }
 
-TEST_CASE("mean - three elements")
+TEST(Mean, ThreeElements)
 {
     std::vector<double> numbers{ 2.0, 2.5, 3.0 }; 
-    REQUIRE_THAT(ax::ranges::mean(numbers), Catch::Matchers::WithinRel(2.5));
+    ASSERT_DOUBLE_EQ(ax::ranges::mean(numbers), 2.5);
 }
 
-TEST_CASE("variance - empty range")
+TEST(Variance, EmptyRange)
 {
-    REQUIRE_THROWS_AS(ax::ranges::variance(std::vector<double>{}), std::invalid_argument);
+    ASSERT_THROW(auto result{ ax::ranges::variance(std::vector<double>{}) }, std::invalid_argument);
 }
 
-TEST_CASE("variance - one element")
+TEST(Variance, OneElement)
 {
     std::vector<double> numbers{ 2.0 }; 
-    REQUIRE_THAT(ax::ranges::variance(numbers), Catch::Matchers::WithinRel(0.0));
+    ASSERT_DOUBLE_EQ(ax::ranges::variance(numbers), 0.0);
 }
 
-TEST_CASE("variance - one element float")
+TEST(Variance, OneElementFloat)
 {
     std::vector<float> numbers{ 2.0 }; 
-    REQUIRE_THAT(ax::ranges::variance<float>(numbers), Catch::Matchers::WithinRel(0.0f));
+    ASSERT_FLOAT_EQ(ax::ranges::variance<float>(numbers), 0.0f);
 }
 
-TEST_CASE("variance - more elements")
+TEST(Variance, MoreElements)
 {
     std::vector<double> numbers{ 2, 3, 4, 6 };
-    REQUIRE_THAT(ax::ranges::variance(numbers), Catch::Matchers::WithinRel(2.1875));
+    ASSERT_DOUBLE_EQ(ax::ranges::variance(numbers), 2.1875);
 }
 
-TEST_CASE("stdev - empty range")
+TEST(Stdev, EmptyRange)
 {
-    REQUIRE_THROWS_AS(ax::ranges::stdev(std::vector<double>{}), std::invalid_argument);
+    ASSERT_THROW(auto result{ ax::ranges::stdev(std::vector<double>{}) }, std::invalid_argument);
 }
 
-TEST_CASE("stdev - one element")
+TEST(Stdev, OneElement)
 {
     std::vector<double> numbers{ 2.0 }; 
-    REQUIRE_THAT(ax::ranges::stdev(numbers), Catch::Matchers::WithinRel(0.0));
+    ASSERT_DOUBLE_EQ(ax::ranges::stdev(numbers), 0.0);
 }
 
-TEST_CASE("stdev - one element float")
+TEST(Stdev, OneElementFloat)
 {
     std::vector<float> numbers{ 2.0 }; 
-    REQUIRE_THAT(ax::ranges::stdev<float>(numbers), Catch::Matchers::WithinRel(0.0f));
+    ASSERT_FLOAT_EQ(ax::ranges::stdev<float>(numbers), 0.0f);
 }
 
-TEST_CASE("stdev - more elements")
+TEST(Stdev, MoreElements)
 {
     std::vector<double> numbers{ 2, 7 };
-    REQUIRE_THAT(ax::ranges::stdev(numbers), Catch::Matchers::WithinRel(2.5));
+    ASSERT_DOUBLE_EQ(ax::ranges::stdev(numbers), 2.5);
 }
-
-
-
-

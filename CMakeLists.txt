@@ -60,6 +60,7 @@ install(FILES
 )
 
 if(AX_BUILD_TESTING)
+    enable_testing()
     add_subdirectory(test)
 endif()
 

@@ -1,4 +1,4 @@
-#include <catch2/catch_test_macros.hpp>
+#include <gtest/gtest.h>
 #include <ax/packet_iterator.hpp>
 #include <ranges>
 #include <numeric>
@@ -11,86 +11,82 @@ struct get_size
     }
 };
 
-TEST_CASE("is forward iterator")
+TEST(TestPacketIterator, IsForwardIterator) 
 {
-    REQUIRE(std::forward_iterator<ax::packet_iterator<const std::byte, get_size>>);
+    ASSERT_TRUE((std::forward_iterator<ax::packet_iterator<const std::byte, get_size>>));
 }
 
-TEST_CASE("is forward range")
+TEST(TestPacketIterator, IsForwardRange)
 {
-    REQUIRE(std::ranges::forward_range<ax::packet_iterator<const std::byte, get_size>>);
+    ASSERT_TRUE((std::ranges::forward_range<ax::packet_iterator<const std::byte, get_size>>));
 }
 
-TEST_CASE("default iterator")
+TEST(TestPacketIterator, DefaultIterator)
 {
-    REQUIRE(std::ranges::distance(ax::packet_iterator<const std::byte, get_size>{}) == 0);
+    ASSERT_TRUE(std::ranges::distance(ax::packet_iterator<const std::byte, get_size>{}) == 0);
 }
 
-TEST_CASE("empty buffer")
+TEST(TestPacketIterator, EmptyBuffer)
 {
     std::vector<int> const buffer{};
     auto const buffer_as_bytes{ std::as_bytes(std::span(buffer)) };
-    REQUIRE(std::ranges::distance(ax::packet_iterator{buffer_as_bytes, get_size{}}) == 0);
+    ASSERT_TRUE(std::ranges::distance(ax::packet_iterator{buffer_as_bytes, get_size{}}) == 0);
 }
 
-TEST_CASE("complete packets")
+TEST(TestPacketIterator, CompletePackets)
 {
     std::vector<std::uint8_t> const buffer{ 3, 0, 0, 2, 0, 4, 0, 0, 0 };
     auto const buffer_as_bytes{ std::as_bytes(std::span(buffer)) };
 
-    SECTION("correct distance") 
-    {
-        REQUIRE(std::ranges::distance(ax::packet_iterator{buffer_as_bytes, get_size{}}) == 3);
-    }
+    ASSERT_TRUE(std::ranges::distance(ax::packet_iterator{buffer_as_bytes, get_size{}}) == 3);
 
-    SECTION("correct span sizes") 
-    {
-        auto it{ ax::packet_iterator{buffer_as_bytes, get_size{}} };
-        REQUIRE((*it).size() == 3);
-        REQUIRE((*++it).size() == 2);
-        REQUIRE((*++it).size() == 4);
-    }
+    auto it{ ax::packet_iterator{buffer_as_bytes, get_size{}} };
+    ASSERT_TRUE((*it).size() == 3);
+    ASSERT_TRUE((*++it).size() == 2);
+    ASSERT_TRUE((*++it).size() == 4);
 }
 
-TEST_CASE("with lambda")
+
+
+TEST(TestPacketIterator, WithLambda)
 {
     std::vector<std::uint8_t> const buffer{ 3, 0, 0, 2, 0, 4, 0, 0, 0 };
     auto const buffer_as_bytes{ std::as_bytes(std::span(buffer)) };
 
-    REQUIRE(std::ranges::distance(ax::packet_iterator{buffer_as_bytes, 
+    ASSERT_TRUE(std::ranges::distance(ax::packet_iterator{buffer_as_bytes, 
     [](std::span<const std::byte> buf)
     {
         return std::to_integer<std::size_t>(buf.front());
     }}) == 3);
 }
 
-TEST_CASE("with lambda and another type")
+TEST(TestPacketIterator, WithLambdaAndAnotherType)
 {
     std::vector<std::uint8_t> const buffer{ 3, 0, 0, 2, 0, 4, 0, 0, 0 };
 
-    REQUIRE(std::ranges::distance(ax::packet_iterator{std::span(buffer), 
+    ASSERT_TRUE(std::ranges::distance(ax::packet_iterator{std::span(buffer), 
     [](std::span<const std::uint8_t> buf)
     {
         return buf.front();
     }}) == 3);
 }
 
-TEST_CASE("incomplete packets 1")
+TEST(TestPacketIterator, IncompletePackets)
 {
     std::vector<std::uint8_t> const buffer{ 3, 0 };
     auto const buffer_as_bytes{ std::as_bytes(std::span(buffer)) };
-    REQUIRE(std::ranges::distance(ax::packet_iterator{buffer_as_bytes, get_size{}}) == 0);
+    ASSERT_TRUE(std::ranges::distance(ax::packet_iterator{buffer_as_bytes, get_size{}}) == 0);
 }
 
-TEST_CASE("incomplete packets 2")
+TEST(TestPacketIterator, IncompletePackets2)
 {
     std::vector<std::uint8_t> const buffer{ 3, 0, 0, 2 };
     auto const buffer_as_bytes{ std::as_bytes(std::span(buffer)) };
-    REQUIRE(std::ranges::distance(ax::packet_iterator{buffer_as_bytes, get_size{}}) == 1);
-    REQUIRE((*ax::packet_iterator{buffer_as_bytes, get_size{}}).size() == 3);
+    ASSERT_TRUE(std::ranges::distance(ax::packet_iterator{buffer_as_bytes, get_size{}}) == 1);
+    ASSERT_TRUE((*ax::packet_iterator{buffer_as_bytes, get_size{}}).size() == 3);
 }
 
-TEST_CASE("return range from function")
+TEST(TestPacketIterator, ReturnRangeFromFunction)
 {
     std::vector<std::uint8_t> const buffer{ 3, 0, 0, 2, 0, 4, 0, 0, 0 };
     auto range{ []<typename T>(std::span<T> buffer)
@@ -100,5 +96,5 @@ TEST_CASE("return range from function")
                     return buf.front();
                 }};
         } };
-    REQUIRE(std::ranges::distance(range(std::span{buffer})) == 3);
+    ASSERT_TRUE(std::ranges::distance(range(std::span{buffer})) == 3);
 }
