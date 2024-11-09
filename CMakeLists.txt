@@ -13,7 +13,7 @@ include(GNUInstallDirs)
 include(CMakePackageConfigHelpers)
 include(CMakeDependentOption)
 
-cmake_dependent_option(AX_BUILD_TESTS
+cmake_dependent_option(AX_BUILD_TESTING
   "Enable ax tests" ON
   "BUILD_TESTING" OFF
 )
@@ -59,7 +59,7 @@ install(FILES
     DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/${PROJECT_NAME}
 )
 
-if(AX_BUILD_TESTS)
+if(AX_BUILD_TESTING)
     add_subdirectory(test)
 endif()
 
